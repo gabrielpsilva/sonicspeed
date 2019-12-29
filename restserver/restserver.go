@@ -1,15 +1,15 @@
 package restserver
 
 import (
-	"ginRestfulBase/dbmongo"
-	"ginRestfulBase/restserver/middleware"
+	"github.com/gabrielpsilva/sonicspeed/dbmongo"
+	"github.com/gabrielpsilva/sonicspeed/restserver/middleware"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
 )
 
-type ServerFunc func(*RestServer, *Context)
+type ServerFunc func(rs *RestServer, c *Context)
 
 type RestServer struct {
 	Gin 	*gin.Engine 		// direct access to http server

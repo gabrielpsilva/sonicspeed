@@ -16,6 +16,5 @@ func RequestIDWithOpts(headers []string) gin.HandlerFunc {
 				return
 			}
 		}
-		uid, _ := uuid.NewV4()
-		c.Set("X-Request-Id", uid.String())
+		c.Set("X-Request-Id", uuid.NewV4().String())
 	}}
