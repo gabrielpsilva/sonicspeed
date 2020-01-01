@@ -1,4 +1,4 @@
-package sonicspeed
+package main
 
 import (
 	"github.com/gabrielpsilva/sonicspeed/restserver"
@@ -113,14 +113,14 @@ func TestRestServer_RegisterFunc(t *testing.T) {
 			ctx.Log().Errorf("can not fetch db list: %v", err)
 			return
 		}
-		ctx.Rest.JSON(200, databases)
+		ctx.JSON(200, databases)
 	}
 
-	s.RegisterFunc("test", fn)
+	s.RegisterFunc("/v1", "/RegisterFunc", "GET", fn)
 
 	// Set up Request
 	w := httptest.NewRecorder()
-	req, _ := http.NewRequest("GET", "/v1/test", nil)
+	req, _ := http.NewRequest("GET", "/v1/RegisterFunc", nil)
 	req.Header.Add("User-Agent", "Test")
 	s.Gin.ServeHTTP(w, req)
 

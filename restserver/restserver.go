@@ -7,6 +7,8 @@ import (
 	"github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
+	"regexp"
+	"strings"
 )
 
 type ServerFunc func(rs *RestServer, c *Context)
@@ -37,16 +39,31 @@ func (s *RestServer) AddRequestIDHeader(headers ...string){
 	s.reqIDHeaders = append(s.reqIDHeaders, headers...)
 }
 
-func (s *RestServer) RegisterFunc(path string, serverFunc ServerFunc){
-
-	// Function to request
+func (s *RestServer) RegisterFunc(group, path, httpMethod string, serverFunc ServerFunc) {
 	fn := func(c *gin.Context){
 		serverFunc(s, ContextWrapper(c))
 	}
-	// Set up request and function
-	s.Gin.Group("/v1").GET(path, fn)
-
-
+	method := strings.ToUpper(httpMethod)
+	reg, _ := regexp.Compile("[^A-Z]+")
+	method = reg.ReplaceAllString(method, "")
+	switch method {
+	case "GET":
+		s.Gin.Group(group).GET(path, fn)
+	case "POST":
+		s.Gin.Group(group).POST(path, fn)
+	case "HEAD":
+		s.Gin.Group(group).HEAD(path, fn)
+	case "OPTIONS":
+		s.Gin.Group(group).OPTIONS(path, fn)
+	case "PATCH":
+		s.Gin.Group(group).PATCH(path, fn)
+	case "DELETE":
+		s.Gin.Group(group).DELETE(path, fn)
+	case "PUT":
+		s.Gin.Group(group).PUT(path, fn)
+	case "ANY":
+		s.Gin.Group(group).Any(path, fn)
+	}
 }
 
 func (s *RestServer) RunServer(){

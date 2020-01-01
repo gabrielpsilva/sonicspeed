@@ -1,4 +1,4 @@
-package sonicspeed
+package main
 
 import (
 	error "github.com/gabrielpsilva/sonicspeed/error"

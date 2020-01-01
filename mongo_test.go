@@ -1,4 +1,4 @@
-package sonicspeed
+package main
 
 import (
 	"context"

@@ -2,7 +2,6 @@ package error
 
 import (
 	"fmt"
-	"github.com/gin-gonic/gin"
 )
 
 const (
@@ -35,31 +34,6 @@ func NewE(code int, err error, documentation string) Error {
 	return New(code, fmt.Sprintf("%s", err), documentation)
 }
 
-func ThrowHTTPError(c *gin.Context, err Error){
-	c.AbortWithError(err.getHttpCode(), &err)
-}
-
-func ThrowHTTPErrorE(c *gin.Context, err Error, append error){
-	if &err != nil {
-		err.Description = fmt.Sprintf("%s: %v", err.Description, append)
-	}
-	//c.AbortWithError(err.getHttpCode(), &err)
-	c.AbortWithStatusJSON(err.getHttpCode(), &err)
-}
-
-func (e *Error) getHttpCode() int{
-	if e.Code < 999 {
-		e.Description = "error throwing another error (Jezz!)"
-		e.Documentation = "Error code can not be > 1000"
-		e.Code = 1500
-	}
-	return e.Code % 1e3
-}
-
-
-func (e *Error) formatDesc(err string) string {
-	return err + e.Description
-}
 
 func (e *Error) Error() string {
 	//return fmt.Sprintf("ERROR: \ncode: %d\ndesc:%s\ndoc:%s", e.code, e.description, e.documentation)
